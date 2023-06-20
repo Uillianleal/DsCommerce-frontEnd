@@ -1,7 +1,11 @@
 import "./styles.css";
 
-function ButtonInverse() {
-  return <div className="dsc-btn dsc-btn-blue">Comprar</div>;
+type Props = {
+  text: string;
+};
+
+function ButtonPrimary({ text }: Props) {
+  return <div className="dsc-btn dsc-btn-blue">{text}</div>;
 }
 
-export default ButtonInverse;
+export default ButtonPrimary;

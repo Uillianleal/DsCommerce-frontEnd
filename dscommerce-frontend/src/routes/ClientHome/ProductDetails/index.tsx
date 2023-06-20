@@ -1,9 +1,8 @@
 import "./styles.css";
-import HeaderClient from "../../components/HeaderClient";
-import ProductDetailsCard from "../../components/ProductDetailsCard";
-import ButtonInverse from "../../components/ButtonPrimary";
-import ButtonPrimary from "../../components/ButtonInverse";
-import { ProductDTO } from "../../models/product";
+import ProductDetailsCard from "../../../components/ProductDetailsCard";
+import ButtonInverse from "../../../components/ButtonPrimary";
+import ButtonPrimary from "../../../components/ButtonInverse";
+import { ProductDTO } from "../../../models/product";
 
 const product: ProductDTO = {
   id: 2,
@@ -27,13 +26,12 @@ const product: ProductDTO = {
 function ProductDetails() {
   return (
     <>
-      <HeaderClient />
       <main>
         <section id="product-details-section" className="dsc-container">
           <ProductDetailsCard product={product} />
           <div className="dsc-btn-page-container">
-            <ButtonInverse />
-            <ButtonPrimary />
+            <ButtonInverse text="Comprar" />
+            <ButtonPrimary text="Início" />
           </div>
         </section>
       </main>

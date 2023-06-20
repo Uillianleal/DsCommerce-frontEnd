@@ -1,5 +1,4 @@
 import "./styles.css";
-import computerImg from "../../assets/computer.png";
 import Productcategory from "../ProductCategory";
 import { ProductDTO } from "../../models/product";
 
