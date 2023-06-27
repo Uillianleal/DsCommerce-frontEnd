@@ -2,13 +2,22 @@ import "./styles.css";
 import ProductDetailsCard from "../../../components/ProductDetailsCard";
 import ButtonInverse from "../../../components/ButtonPrimary";
 import ButtonPrimary from "../../../components/ButtonInverse";
-import * as ProductService from "../../../services/product-service";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { ProductDTO } from "../../../models/product";
+import * as ProductService from "../../../services/product-service";
 
 function ProductDetails() {
   const params = useParams();
-  const product = ProductService.findById(Number(params.productId));
+
+  const [product, setProduct] = useState<ProductDTO>();
+
+  useEffect(() => {
+    ProductService.findById(Number(params.productId)).then((reponse) => {
+      setProduct(reponse.data);
+    });
+  }, []);
 
   return (
     <>
