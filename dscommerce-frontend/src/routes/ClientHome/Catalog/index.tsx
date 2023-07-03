@@ -5,6 +5,7 @@ import ButtonNextPage from "../../../components/ButtonNextPage";
 import { useEffect, useState } from "react";
 import { ProductDTO } from "../../../models/product";
 import * as ProductService from "../../../services/product-service";
+import { isAuthenticated } from "../../../services/auth-service";
 
 type QueryParams = {
   page: number;
