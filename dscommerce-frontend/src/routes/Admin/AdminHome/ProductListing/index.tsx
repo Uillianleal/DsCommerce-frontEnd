@@ -17,11 +17,12 @@ type QueryParams = {
 function ProductListing() {
   const [dialogInfoData, setDialogInfoData] = useState({
     visible: false,
-    message: "Operação com sucesso!",
+    message: "Realizado com sucesso!",
   });
 
   const [dialogConfirmationData, setDialogConfirmationData] = useState({
     visible: false,
+    id: 0,
     message: "Tem certeza?",
   });
 
@@ -54,16 +55,33 @@ function ProductListing() {
   }
 
   function handleDialogInfoClose() {
-    setDialogInfoData({ ...dialogInfoData, visible: true });
+    setDialogInfoData({ ...dialogInfoData, visible: false });
   }
 
-  function handleDeleteClick() {
-    setDialogConfirmationData({ ...dialogConfirmationData, visible: true });
+  function handleDeleteClick(productId: number) {
+    setDialogConfirmationData({
+      ...dialogConfirmationData,
+      id: productId,
+      visible: true,
+    });
   }
 
-  function handleDialogConfirmationAnswer(answer: boolean) {
-    console.log(answer);
-    setDialogConfirmationData({ ...dialogInfoData, visible: false });
+  function handleDialogConfirmationAnswer(answer: boolean, productId: number) {
+    if (answer) {
+      ProductService.deleteById(productId)
+        .then(() => {
+          setProducts([]);
+          setQueryParams({ ...queryParams, page: 0 });
+        })
+        .catch((error) => {
+          setDialogInfoData({
+            visible: true,
+            message: error.response.data.error,
+          });
+        });
+    }
+
+    setDialogConfirmationData({ ...dialogConfirmationData, visible: false });
   }
 
   return (
@@ -110,7 +128,7 @@ function ProductListing() {
                 </td>
                 <td>
                   <img
-                    onClick={handleDeleteClick}
+                    onClick={() => handleDeleteClick(product.id)}
                     className="dsc-product-listing-btn"
                     src={deleteIcon}
                     alt="Deletar"
@@ -131,8 +149,9 @@ function ProductListing() {
 
       {dialogConfirmationData.visible && (
         <DialogConfimation
+          id={dialogConfirmationData.id}
           message={dialogConfirmationData.message}
-          onDialogAnswe={handleDialogConfirmationAnswer}
+          onDialogAnswer={handleDialogConfirmationAnswer}
         />
       )}
     </main>
