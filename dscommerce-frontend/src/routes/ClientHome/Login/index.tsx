@@ -1,24 +1,45 @@
 import "./styles.css";
-import { CredentialsDTO } from "../../../models/auth";
 import { useContext, useState } from "react";
 import * as authService from "../../../services/auth-service";
 import { useNavigate } from "react-router-dom";
 import { ContextToken } from "../../../utils/context-token";
+import FormInput from "../../../components/FormInput";
 
 function Login() {
   const navigate = useNavigate();
 
   const { setContextTokenPayload } = useContext(ContextToken);
 
-  const [formData, setFormData] = useState<CredentialsDTO>({
-    username: "",
-    password: "",
+  const [formData, setFormData] = useState<any>({
+    username: {
+      value: "",
+      id: "username",
+      name: "username",
+      type: "text",
+      placeholder: "Email",
+      validation: function (value: string) {
+        return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          value.toLowerCase()
+        );
+      },
+      message: "Favor informar um email válido",
+    },
+    password: {
+      value: "",
+      id: "password",
+      name: "password",
+      type: "password",
+      placeholder: "Senha",
+    },
   });
 
-  function handleSubmit(event: any) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     authService
-      .loginRequest(formData)
+      .loginRequest({
+        username: formData.username.value,
+        password: formData.password.value,
+      })
       .then((response) => {
         authService.saveAccessToken(response.data.access_token);
         setContextTokenPayload(authService.getAccessTokenPayload());
@@ -29,10 +50,10 @@ function Login() {
       });
   }
 
-  function handleInputChange(event: any) {
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
     const name = event.target.name;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: { ...formData[name], value: value } });
   }
 
   return (
@@ -43,24 +64,18 @@ function Login() {
             <h2>Login</h2>
             <div className="dsc-form-controls-container">
               <div>
-                <input
+                <FormInput
+                  {...formData.username}
                   onChange={handleInputChange}
-                  name="username"
-                  value={formData.username}
                   className="dsc-form-control"
-                  type="text"
-                  placeholder="Email"
                 />
                 <div className="dsc-form-error"></div>
               </div>
               <div>
-                <input
+                <FormInput
+                  {...formData.password}
                   onChange={handleInputChange}
-                  name="password"
-                  value={formData.password}
                   className="dsc-form-control"
-                  type="password"
-                  placeholder="Senha"
                 />
               </div>
             </div>
