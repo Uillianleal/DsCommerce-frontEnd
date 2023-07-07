@@ -2,7 +2,8 @@ import ButtonPrimary from "../ButtonPrimary";
 
 type Props = {
   message: string;
-  onDialogClose: () => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  onDialogClose: Function;
 };
 
 function DialogInfo({ message, onDialogClose }: Props) {
