@@ -8,6 +8,8 @@ import SearchBar from "../../../../components/SearchBar";
 import ButtonNextPage from "../../../../components/ButtonNextPage";
 import DialogInfo from "../../../../components/DialogInfo";
 import DialogConfimation from "../../../../components/DialogConfimation";
+import ButtonInverse from "../../../../components/ButtonInverse";
+import { useNavigate } from "react-router-dom";
 
 type QueryParams = {
   page: number;
@@ -15,6 +17,8 @@ type QueryParams = {
 };
 
 function ProductListing() {
+  const navigate = useNavigate();
+
   const [dialogInfoData, setDialogInfoData] = useState({
     visible: false,
     message: "Realizado com sucesso!",
@@ -44,6 +48,10 @@ function ProductListing() {
       }
     );
   }, [queryParams]);
+
+  function handleNewProductClick() {
+    navigate("/admin/products/create");
+  }
 
   function handleSearch(searchText: string) {
     setProducts([]);
@@ -90,7 +98,9 @@ function ProductListing() {
         <h2 className="dsc-section-title dsc-mb20">Cadastro de produtos</h2>
 
         <div className="dsc-btn-page-container dsc-mb20">
-          <div className="dsc-btn dsc-btn-white">Novo</div>
+          <div onClick={handleNewProductClick}>
+            <ButtonInverse text="Novo" />
+          </div>
         </div>
 
         <SearchBar onSearch={handleSearch} />
