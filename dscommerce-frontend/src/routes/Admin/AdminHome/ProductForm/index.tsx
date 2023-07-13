@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import React from "react";
@@ -15,6 +15,8 @@ function ProductForm() {
   const params = useParams();
 
   const isEditing = params.productId !== "create";
+
+  const navigate = useNavigate();
 
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
 
@@ -102,7 +104,17 @@ function ProductForm() {
       setFormData(formDataValidated);
       return;
     }
-    // console.log(forms.toValues(formData));
+    const requestBody = forms.toValues(formData);
+    if (isEditing) {
+      requestBody.id = params.productId;
+    }
+    const request = isEditing
+      ? productService.updateRequest(requestBody)
+      : productService.insertRequest(requestBody);
+
+    request.then(() => {
+      navigate("/admin/products");
+    });
   }
 
   return (
