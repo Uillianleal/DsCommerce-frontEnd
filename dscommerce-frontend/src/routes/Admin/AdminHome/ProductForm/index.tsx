@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import React from "react";
@@ -112,9 +112,17 @@ function ProductForm() {
       ? productService.updateRequest(requestBody)
       : productService.insertRequest(requestBody);
 
-    request.then(() => {
-      navigate("/admin/products");
-    });
+    request
+      .then(() => {
+        navigate("/admin/products");
+      })
+      .catch((error) => {
+        const newInputs = forms.setBackEndErrors(
+          formData,
+          error.response.data.errors
+        );
+        setFormData(newInputs);
+      });
   }
 
   return (
