@@ -9,6 +9,8 @@ import * as forms from "../../../utils/forms";
 function Login() {
   const navigate = useNavigate();
 
+  const [submitResponseFail, setSubmitResponseFail] = useState(false);
+
   const { setContextTokenPayload } = useContext(ContextToken);
 
   const [formData, setFormData] = useState<any>({
@@ -36,6 +38,15 @@ function Login() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    setSubmitResponseFail(false);
+
+    const formDataValidated = forms.dirtyAndValidateAll(formData);
+    if (forms.hasAnyInvalid(formDataValidated)) {
+      setFormData(formDataValidated);
+      return;
+    }
+
     authService
       .loginRequest(forms.toValues(formData))
       .then((response) => {
@@ -43,8 +54,8 @@ function Login() {
         setContextTokenPayload(authService.getAccessTokenPayload());
         navigate("/cart");
       })
-      .catch((error) => {
-        console.log("Erro no login,", error);
+      .catch(() => {
+        setSubmitResponseFail(true);
       });
   }
 
@@ -85,6 +96,11 @@ function Login() {
                 />
               </div>
             </div>
+            {submitResponseFail && (
+              <div className="dsc-form-global-error">
+                Usário ou senha inváidos
+              </div>
+            )}
 
             <div className="dsc-login-form-buttons dsc-mt20">
               <button type="submit" className="dsc-btn dsc-btn-blue">
